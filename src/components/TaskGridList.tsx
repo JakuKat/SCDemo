@@ -34,7 +34,7 @@ export const TaskGridList = ({ tasksList, status }: TaskGridListProps) => {
       iterate: "created",
       order: "asc",
     },
-    { label: "Alphabeticaly", value: "alpha", iterate: "name", order: "asc" },
+    { label: "alphabetically", value: "alpha", iterate: "name", order: "asc" },
     // TODO { label: "Random", value: "random", iterate: "name", order: "asc" },
   ];
 
