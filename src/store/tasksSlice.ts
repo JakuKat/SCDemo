@@ -1,5 +1,7 @@
-import { createSlice, nanoid, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import _ from "lodash";
 import moment from "moment";
+import { nanoid } from "nanoid";
 
 const initialState: {
   tasks: Array<ITask>;
@@ -109,6 +111,32 @@ export const taskSlice = createSlice({
         tasks: [...filteredTasks.concat(editedTask)],
       };
     },
+    editTaskOrder: (
+      state,
+      action: PayloadAction<{ task: ITask; startIndex: number; endIndex: number }>
+    ) => {
+      const { task, startIndex, endIndex } = action.payload;
+
+      const sortedTasks: Array<ITask> = _.orderBy(state.tasks, [
+        "todo",
+        "progress",
+        "done",
+      ]);
+      const filteredTasks = sortedTasks.filter(
+        (sortedTask) => sortedTask.status === task.status
+      );
+      const [removed] = filteredTasks.splice(startIndex, 1);
+      filteredTasks.splice(endIndex, 0, removed);
+
+      const updatedTasks = sortedTasks
+        .filter((sortedTask) => sortedTask.status !== task.status)
+        .concat(filteredTasks);
+
+      return {
+        ...state,
+        tasks: updatedTasks,
+      };
+    },
     removeTask: (state, action: PayloadAction<ITask>) => {
       const updatedTasks: ITask[] = state.tasks.filter(
         (task: ITask) => task.id !== action.payload.id
@@ -138,6 +166,7 @@ export const taskSlice = createSlice({
 export const {
   addTask,
   editTask,
+  editTaskOrder,
   removeTask,
   showTaskDetailOverlay,
   hideTaskDetailOverlay,

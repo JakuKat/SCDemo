@@ -1,4 +1,4 @@
-import { compose, configureStore } from "@reduxjs/toolkit";
+import { applyMiddleware, compose, configureStore } from "@reduxjs/toolkit";
 import reducer from "./reducer";
 
 declare global {

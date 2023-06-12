@@ -31,7 +31,7 @@ export const HomeLayout = () => {
   };
 
   return (
-    <div className="min-h-full">
+    <div className="h-full">
       <Disclosure as="nav" className="border-b border-gray-200 bg-white">
         {({ open }) => (
           <>

@@ -5,8 +5,15 @@ import { classNames, getStatusColorScheme, getStatusLabel } from "../functions";
 import { useDispatch } from "react-redux";
 import { editTask, removeTask, showTaskDetailOverlay } from "../store/tasksSlice";
 import { showEdit } from "../store/modalsSlice";
+import { Draggable } from "react-beautiful-dnd";
 
-export const TaskGridItem = ({ taskData }: { taskData: ITask }) => {
+export const TaskGridItem = ({
+  taskData,
+  taskIndex,
+}: {
+  taskData: ITask;
+  taskIndex: number;
+}) => {
   const { name, status, created } = taskData;
 
   const dispatch: Dispatch<any> = useDispatch();
@@ -140,35 +147,48 @@ export const TaskGridItem = ({ taskData }: { taskData: ITask }) => {
   };
 
   return (
-    <div className="" onDoubleClick={() => handleShowOverlay()}>
-      <div
-        className={classNames(
-          getStatusColorScheme(status),
-          "flex items-center gap-x-4 border-b border-gray-900/5 px-6 py-4"
-        )}
-      >
-        <div className="text-sm font-medium leading-6 text-gray-900">{name}</div>
-        {getOptions()}
-      </div>
-      <dl className="-my-3 divide-y divide-gray-100 px-6 py-4 text-sm leading-6">
-        <div className="flex justify-between gap-x-4 py-3">
-          <dt className="text-gray-500">Created</dt>
-          <dd className="text-gray-700">{created.toDateString()}</dd>
-        </div>
-        <div className="flex justify-between gap-x-4 py-3">
-          <dt className="text-gray-500">Status</dt>
-          <dd className="flex items-start gap-x-2">
-            <div
-              className={classNames(
-                getStatusColorScheme(status),
-                "rounded-md py-1 px-2 text-xs font-medium ring-1 ring-inset"
-              )}
-            >
-              {getStatusLabel(status)}
+    <Draggable key={taskData.id} draggableId={taskData.id} index={taskIndex}>
+      {(draggableProvided, draggableSnapshot) => (
+        <div
+          onDoubleClick={() => handleShowOverlay()}
+          className={classNames(
+            "col-span-1 rounded-lg bg-white shadow h-fit mb-4 ",
+            draggableSnapshot.isDragging ? "bg-orange-600" : ""
+          )}
+          ref={draggableProvided.innerRef}
+          {...draggableProvided.draggableProps}
+          {...draggableProvided.dragHandleProps}
+        >
+          <div
+            className={classNames(
+              getStatusColorScheme(status),
+              "flex items-center gap-x-4 border-b border-gray-900/5 px-6 py-4"
+            )}
+          >
+            <div className="text-sm font-medium leading-6 text-gray-900">{name}</div>
+            {getOptions()}
+          </div>
+          <dl className="-my-3 divide-y divide-gray-100 px-6 py-4 text-sm leading-6">
+            <div className="flex justify-between gap-x-4 py-3">
+              <dt className="text-gray-500">Created</dt>
+              <dd className="text-gray-700">{created.toDateString()}</dd>
             </div>
-          </dd>
+            <div className="flex justify-between gap-x-4 py-3">
+              <dt className="text-gray-500">Status</dt>
+              <dd className="flex items-start gap-x-2">
+                <div
+                  className={classNames(
+                    getStatusColorScheme(status),
+                    "rounded-md py-1 px-2 text-xs font-medium ring-1 ring-inset"
+                  )}
+                >
+                  {getStatusLabel(status)}
+                </div>
+              </dd>
+            </div>
+          </dl>
         </div>
-      </dl>
-    </div>
+      )}
+    </Draggable>
   );
 };

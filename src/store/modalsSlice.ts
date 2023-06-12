@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-// Define the initial state using that type
+// Define the initial state using this type
 const initialState: {
   isVisible: boolean;
   isEditing: boolean;
@@ -16,12 +16,11 @@ export const modalSlice = createSlice({
   initialState,
   reducers: {
     showCreate: (state) => {
-      state.isVisible = true;
+      return { ...state, isVisible: true };
     },
     showEdit: (state, action: PayloadAction<ITask>) => {
       return { isVisible: true, isEditing: true, editedTask: action.payload };
     },
-
     hide: (state) => {
       return initialState;
     },
