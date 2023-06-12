@@ -96,9 +96,10 @@ export const taskSlice = createSlice({
       const newTask: ITask = {
         ...action.payload,
       };
+
       return {
         ...state,
-        tasks: state.tasks.concat(newTask),
+        tasks: [newTask, ...state.tasks],
       };
     },
     editTask: (
