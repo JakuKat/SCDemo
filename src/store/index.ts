@@ -1,5 +1,6 @@
-import { applyMiddleware, compose, configureStore } from "@reduxjs/toolkit";
+import { compose, configureStore } from "@reduxjs/toolkit";
 import reducer from "./reducer";
+import thunk from "redux-thunk";
 
 declare global {
   interface Window {
@@ -13,6 +14,7 @@ const configureAppStore = () => {
   const store = configureStore({
     reducer,
     devTools: true,
+    middleware: [thunk],
   });
 
   return store;
