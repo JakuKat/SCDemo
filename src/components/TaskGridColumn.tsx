@@ -33,7 +33,7 @@ export const TaskGridColumn = ({ column }: { column: ColumnBody }) => {
       iterate: "created",
       order: "asc",
     },
-    { label: "alphabetically", value: "alpha", iterate: "name", order: "asc" },
+    { label: "Alphabetically", value: "alpha", iterate: "name", order: "asc" },
   ];
 
   const [selectedFilter, setSelectedFilter] = useState<
