@@ -24,7 +24,7 @@ export const TaskGridItem = ({
 
   const handleTaskMove = (task: ITask, newStatus: TaskStatus) => {
     const editedTask = { ...task, status: newStatus as TaskStatus };
-    dispatch(editTask(editedTask));
+    dispatch(editTask({ task: editedTask, endIndex: 0 }));
   };
 
   const handleEdit = () => {

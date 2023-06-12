@@ -27,7 +27,7 @@ export const AddEditTaskModal = () => {
     handleClose();
   };
   const handleEdit = (task: ITask) => {
-    dispatch(editTask(task));
+    dispatch(editTask({ task, endIndex: 0 }));
     handleClose();
   };
 

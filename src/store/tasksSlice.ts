@@ -84,6 +84,21 @@ const initialState: {
   taskDetail: undefined,
 };
 
+const orderTaskList = (tasks: Array<ITask>): Array<ITask> => {
+  return _.orderBy(tasks, ["todo", "progress", "done"]);
+};
+
+const customTaskSplice = (
+  tasks: Array<ITask>,
+  startIndex: number,
+  endIndex: number
+) => {
+  const [removed] = tasks.splice(startIndex, 1);
+  tasks.splice(endIndex, 0, removed);
+
+  return tasks;
+};
+
 export const taskSlice = createSlice({
   name: "tasks",
   initialState,
@@ -97,40 +112,33 @@ export const taskSlice = createSlice({
         tasks: state.tasks.concat(newTask),
       };
     },
-    editTask: (state, action: PayloadAction<ITask>) => {
-      const editedTask: ITask = {
-        ...action.payload,
-      };
-
-      const filteredTasks = state.tasks.filter(
-        (task: ITask) => task.id !== editedTask.id
-      );
-
-      return {
-        ...state,
-        tasks: [...filteredTasks.concat(editedTask)],
-      };
-    },
-    editTaskOrder: (
+    editTask: (
       state,
-      action: PayloadAction<{ task: ITask; startIndex: number; endIndex: number }>
+      action: PayloadAction<{ task: ITask; startIndex?: number; endIndex: number }>
     ) => {
       const { task, startIndex, endIndex } = action.payload;
-
-      const sortedTasks: Array<ITask> = _.orderBy(state.tasks, [
-        "todo",
-        "progress",
-        "done",
-      ]);
-      const filteredTasks = sortedTasks.filter(
+      const filteredTasks = state.tasks
+        .filter((filteredTask: ITask) => filteredTask.id !== task.id)
+        .concat(task);
+      const sortedTasks: Array<ITask> = orderTaskList(filteredTasks);
+      const filteredSortedTasks = sortedTasks.filter(
         (sortedTask) => sortedTask.status === task.status
       );
-      const [removed] = filteredTasks.splice(startIndex, 1);
-      filteredTasks.splice(endIndex, 0, removed);
+
+      let newTasks: Array<ITask> = filteredSortedTasks;
+
+      if (startIndex == undefined && endIndex != undefined) {
+        const currentIndex = filteredSortedTasks.findIndex(
+          (sortedTask) => sortedTask.id == task.id
+        );
+        newTasks = customTaskSplice(filteredSortedTasks, currentIndex, endIndex);
+      } else if (startIndex != undefined && endIndex != undefined) {
+        newTasks = customTaskSplice(filteredSortedTasks, startIndex, endIndex);
+      }
 
       const updatedTasks = sortedTasks
         .filter((sortedTask) => sortedTask.status !== task.status)
-        .concat(filteredTasks);
+        .concat(newTasks);
 
       return {
         ...state,
@@ -166,7 +174,6 @@ export const taskSlice = createSlice({
 export const {
   addTask,
   editTask,
-  editTaskOrder,
   removeTask,
   showTaskDetailOverlay,
   hideTaskDetailOverlay,

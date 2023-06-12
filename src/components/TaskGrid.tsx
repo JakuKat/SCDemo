@@ -5,7 +5,7 @@ import { RootState } from "../store";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { Dispatch, useState } from "react";
 import _ from "lodash";
-import { editTask, editTaskOrder } from "../store/tasksSlice";
+import { editTask } from "../store/tasksSlice";
 
 export type ColumnBody = {
   id: string;
@@ -71,7 +71,7 @@ export const TaskGrid = () => {
     // If the user drops within the same column but in a different position
     if (sourceCol.id === destinationCol.id) {
       dispatch(
-        editTaskOrder({
+        editTask({
           task: updatedTask,
           startIndex: source.index,
           endIndex: destination.index,
@@ -82,7 +82,10 @@ export const TaskGrid = () => {
 
     // if user drags task to different column
     dispatch(
-      editTask({ ...updatedTask!, status: destination.droppableId as TaskStatus })
+      editTask({
+        task: { ...updatedTask, status: destination.droppableId as TaskStatus },
+        endIndex: destination.index,
+      })
     );
     return;
   };
