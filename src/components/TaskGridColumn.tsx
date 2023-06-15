@@ -1,7 +1,7 @@
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { TaskGridItem } from "./TaskGridItem";
 import { Menu, Transition } from "@headlessui/react";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, memo, useMemo, useState } from "react";
 import { classNames } from "../functions";
 import _ from "lodash";
 import { Droppable } from "react-beautiful-dnd";
@@ -12,7 +12,7 @@ type FilterValue = "newest" | "oldest" | "alpha" | "random";
 type FilterIterate = "created" | "name";
 type FilterOrder = "asc" | "desc";
 
-export const TaskGridColumn = ({ column }: { column: ColumnBody }) => {
+export const TaskGridColumn = memo(({ column }: { column: ColumnBody }) => {
   const { status, tasks, title } = column;
 
   const filterOptions: Array<{
@@ -142,4 +142,4 @@ export const TaskGridColumn = ({ column }: { column: ColumnBody }) => {
       </Droppable>
     </div>
   );
-};
+});

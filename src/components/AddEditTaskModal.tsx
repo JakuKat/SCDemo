@@ -87,12 +87,12 @@ export const AddEditTaskModal = () => {
                       })}
                       validateOnChange
                       onSubmit={(values: initialValuesProps) => {
-                        if (modalReducer.isEditing) {
+                        if (modalReducer.isEditing && modalReducer.editedTask) {
                           handleEdit({
                             ...modalReducer.editedTask,
                             name: values.name,
                             description: values.description,
-                          } as ITask);
+                          });
                         } else {
                           handleCreate({
                             id: nanoid(),

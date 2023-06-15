@@ -1,4 +1,4 @@
-import { Dispatch, Fragment } from "react";
+import { Dispatch, Fragment, memo } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { EllipsisHorizontalIcon } from "@heroicons/react/20/solid";
 import { classNames, getStatusColorScheme, getStatusLabel } from "../functions";
@@ -17,7 +17,6 @@ export const TaskGridItem = ({
   const { name, status, created } = taskData;
 
   const dispatch: Dispatch<any> = useDispatch();
-
   const handleTaskDelete = (task: ITask) => {
     dispatch(removeTask(task));
   };
@@ -192,3 +191,5 @@ export const TaskGridItem = ({
     </Draggable>
   );
 };
+
+// export const TaskGridItem = memo(Item);
