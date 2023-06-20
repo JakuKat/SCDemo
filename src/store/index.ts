@@ -9,8 +9,6 @@ declare global {
 }
 
 const configureAppStore = () => {
-  const reduxSagaMonitorOptions = {};
-
   const store = configureStore({
     reducer,
     devTools: true,

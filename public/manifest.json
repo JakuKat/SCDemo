@@ -1,6 +1,6 @@
 {
-  "short_name": "SnowlyCode",
-  "name": "SnowlyCode Demo App",
+  "short_name": "Demo",
+  "name": "Demo App",
   "icons": [
     {
       "src": "favicon.ico",
