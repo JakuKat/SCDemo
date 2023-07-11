@@ -35,8 +35,6 @@ export const HomeLayout = () => {
     dispatch(showCreate());
   };
 
-  console.log("render");
-
   return (
     <div className="h-full">
       <Disclosure as="nav" className="border-b border-gray-200 bg-white">
