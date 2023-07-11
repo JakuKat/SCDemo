@@ -1,13 +1,14 @@
-import { Dispatch, Fragment, PropsWithChildren } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { classNames } from "../functions";
-import { Button } from "../components/Button";
-import { AddEditTaskModal } from "../components/AddEditTaskModal";
+import { Dispatch, Fragment } from "react";
 import { useDispatch } from "react-redux";
-import { showCreate } from "../store/modalsSlice";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
+
+import { AddEditTaskModal } from "../components/AddEditTaskModal";
+import { Button } from "../components/Button";
 import { TaskDetailOverlay } from "../components/TaskDetailOverlay";
+import { classNames } from "../functions";
+import { showCreate } from "../store/modalsSlice";
 
 // mock
 const user = {
@@ -16,8 +17,11 @@ const user = {
   imageUrl:
     "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
 };
-// mocked for one page
-const navigation = [{ name: "Board", href: "board", current: true }];
+
+const navigation = [
+  { name: "Board", href: "/board" },
+  { name: "Playground", href: "/playground" },
+];
 const userNavigation = [
   { name: "Your Profile", href: "/profile" },
   { name: "Settings", href: "/settings" },
@@ -25,10 +29,13 @@ const userNavigation = [
 
 export const HomeLayout = () => {
   const dispatch: Dispatch<any> = useDispatch();
-
+  // TODO: store url/breadcrumbs/active page in redux
+  const location = useLocation();
   const handleModalShow = () => {
     dispatch(showCreate());
   };
+
+  console.log("render");
 
   return (
     <div className="h-full">
@@ -56,12 +63,14 @@ export const HomeLayout = () => {
                         key={item.name}
                         to={item.href}
                         className={classNames(
-                          item.current
+                          item.href == location.pathname
                             ? "border-indigo-500 text-gray-900"
                             : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
                           "inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium"
                         )}
-                        aria-current={item.current ? "page" : undefined}
+                        aria-current={
+                          item.href == location.pathname ? "page" : undefined
+                        }
                       >
                         {item.name}
                       </Link>
@@ -140,12 +149,14 @@ export const HomeLayout = () => {
                     as="a"
                     href={item.href}
                     className={classNames(
-                      item.current
+                      item.href == location.pathname
                         ? "border-indigo-500 bg-indigo-50 text-indigo-700"
                         : "border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800",
                       "block border-l-4 py-2 pl-3 pr-4 text-base font-medium"
                     )}
-                    aria-current={item.current ? "page" : undefined}
+                    aria-current={
+                      item.href == location.pathname ? "page" : undefined
+                    }
                   >
                     {item.name}
                   </Disclosure.Button>
@@ -198,14 +209,19 @@ export const HomeLayout = () => {
         <header>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-between">
             <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
-              Board
+              {
+                navigation[
+                  navigation.findIndex((page) => page.href === location.pathname)
+                ].name
+              }
             </h1>
-            <Button title="Add task" onClick={() => handleModalShow()} />
+            {location.pathname === navigation[0].href && (
+              <Button title="Add task" onClick={() => handleModalShow()} />
+            )}
           </div>
         </header>
         <main>
           <div className="mx-auto max-w-7xl pt-4 lg:pt-0 sm:px-6 lg:px-8">
-            {/* {children} */}
             <Outlet />
           </div>
         </main>
